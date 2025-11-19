@@ -17,3 +17,6 @@ npm run test
 ## Badges
 ![CI](https://github.com/scutuatua-crypto/Czonedive-core/actions/workflows/ci.yml/badge.svg)
 ![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+
+git add README.md
+git commit -m "docs: add README template"
