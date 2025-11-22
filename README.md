@@ -53,7 +53,8 @@ in the Software without restriction...
 [Full text continues in LICENSE.md]
 
 
-
+## splash.log
+```markdown
 🌊 splash.log — Build, Test, Lint workflows committed to czonedive-core, reef-protect-main enforcing status checks
 🌊 Reef test PR — verifying status checks + Copilot review
 🌊 splash.log — Dummy PR reef-test-pr opened, workflows + Copilot review triggered, reef governance verified
