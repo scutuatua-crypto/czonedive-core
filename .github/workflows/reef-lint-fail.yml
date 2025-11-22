@@ -21,3 +21,5 @@ jobs:
 
       - name: Run lint (simulate fail)
         run: exit 1
+      - name: Simulate lint fail
+        run: exit 1
