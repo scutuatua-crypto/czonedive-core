@@ -1,0 +1,22 @@
+name: Reef NFT Mint
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  mint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate mint result
+        id: mint
+        run: echo "minted=✅ Reef NFT #042" >> $GITHUB_OUTPUT
+
+      - name: Update badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: reef-mint
+          LABEL: 'Mint Status'
+          STATUS: ${{ steps.mint.outputs.minted }}
+          COLOR: 00EEFF
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
