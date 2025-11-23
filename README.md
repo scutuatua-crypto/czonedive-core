@@ -32,11 +32,10 @@ npm run test
 - API examples for onboarding
 
 ## Badges
+
 ![Reef Lint Governance](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg)
 ![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Lint Status](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg)
-![Lint Status](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg?job=lint)
-![Governance Status](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg?job=governance)
+
 
 git add README.md
 git commit -m "docs: add README template"
