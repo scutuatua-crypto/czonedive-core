@@ -1,11 +1,11 @@
-name: Reef Lint Fail Test
+name: Reef Lint Governance
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  lint-fail:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -19,5 +19,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Simulate lint fail
+      - name: Run ESLint
+        run: npx eslint .
+
+  governance:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Simulate governance block
         run: exit 1
