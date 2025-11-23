@@ -75,6 +75,7 @@ in the Software without restriction...
 🌊 splash.log — README.md updated with lint status badge, Boss WhaleTrucker surfs reef governance with visible Swagger
 🌊 splash.log — README.md badge section cleaned, governance badge stable, Swagger visibility restored
 🌊 splash.log — reef-mint.yml corrected with valid output syntax, badge logic active, Boss WhaleTrucker ready to commit reef mint
+🌊 splash.log — reef-mint.yml added with BYOB badge logic, README updated with dynamic NFT mint status
 
 
 
