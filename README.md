@@ -35,6 +35,7 @@ npm run test
 
 ![Reef Lint Governance](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg)
 ![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![Mint Status](https://byob.yarr.is/scutuatua-crypto/czonedive-core/reef-mint)
 
 
 git add README.md
