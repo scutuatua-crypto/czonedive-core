@@ -23,3 +23,15 @@ jobs:
         run: exit 1
       - name: Simulate lint fail
         run: exit 1
+name: Reef Lint Fail Test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  lint-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail intentionally
+        run: exit 1
