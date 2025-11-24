@@ -8,20 +8,9 @@ jobs:
   mint:
     runs-on: ubuntu-latest
     steps:
-      - name: Mint NFT via Zora API
+      - name: Simulate mint result
         id: mint
-        run: |
-          response=$(curl -s -X POST https://your-engine-url/contract/7777777/YOUR_CONTRACT_ADDRESS/erc721/mint-to \
-            -H "Content-Type: application/json" \
-            -d '{
-              "receiver": "0xYourWalletAddress",
-              "metadata": {
-                "name": "Reef NFT #042",
-                "description": "Minted from reef governance",
-                "image": "ipfs://QmYourIPFSHash/nft.png"
-              }
-            }')
-          echo "minted=✅ Minted Reef NFT #042" >> $GITHUB_OUTPUT
+        run: echo "minted=✅ Reef NFT #042" >> $GITHUB_OUTPUT
 
       - name: Update badge
         uses: RubbaBoy/BYOB@v1.3.0
