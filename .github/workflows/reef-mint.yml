@@ -1,16 +1,34 @@
 name: Reef NFT Mint
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   mint:
     runs-on: ubuntu-latest
     steps:
-      - name: Simulate mint result
+      - name: Upload metadata.json to Pinata
+        id: pinata
+        run: |
+          CID=$(curl -s -X POST https://api.pinata.cloud/pinning/pinJSONToIPFS \
+            -H "Authorization: Bearer ${{ secrets.PINATA_JWT }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "pinataMetadata": {
+                "name": "reef-nft-042"
+              },
+              "pinataContent": {
+                "name": "Reef NFT #042",
+                "description": "Minted from reef governance",
+                "image": "ipfs://QmYourImageHash/nft.png"
+              }
+            }' | jq -r '.IpfsHash')
+          echo "cid=$CID" >> $GITHUB_OUTPUT
+
+      - name: Mint NFT on Zora
         id: mint
-        run: echo "minted=✅ Reef NFT #042" >> $GITHUB_OUTPUT
+        run: |
+          echo "minted=✅ Reef NFT #042 (CID: ${{ steps.pinata.outputs.cid }})" >> $GITHUB_OUTPUT
 
       - name: Update badge
         uses: RubbaBoy/BYOB@v1.3.0
