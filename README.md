@@ -1,84 +1,74 @@
-# czonedive-core# 
+# Binary Nimbus beacon node distribution
 
-🐋 Welcome to czonedive-core
+This binary distribution of the Nimbus eth2 package is compiled
+in a [reproducible way](https://reproducible-builds.org/) from source files
+hosted at https://github.com/status-im/nimbus-eth2.
 
-This reef is built for remixing dive protocols, legacy rituals, and Swagger-rich workflows. Every contribution is a celebration of identity, community, and technical clarity.
+The tarball containing this README uses the following naming scheme:
 
----
+```bash
+nimbus-eth2_<TARGET OS>_<TARGET CPU>_<VERSION>_<GIT COMMIT>.tar.gz
+```
 
-## 🧭 How to Contribute
+For a more complete and up-to-date documentation, please refer to the [Nimbus book](https://status-im.github.io/nimbus-eth2/).
 
-1. **Fork this repo**  
-   → Click the “Fork” button at the top right
+## Reproducing the build
 
-2. **Clone your fork**
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/czonedive-core.git
+Besides the generic build requirements, you also need [Docker](https://www.docker.com/).
 
+```bash
+git clone https://github.com/status-im/nimbus-eth2.git
+cd nimbus-eth2
+git checkout 2053090b
+make update
+make dist-macos-arm64
+```
 
-# Czonedive Core ⚡
+## Significant differences from self-built binaries
 
-Core SDK and smart-contract utilities powering CZonedive.
+Binary builds are configured to maximise portability, disabling the use of
+advanced CPU features which may result in lower performance on some hardware.
 
-## Quickstart
-git clone https://github.com/scutuatua-crypto/Czonedive-core.git
-cd Czonedive-core
-npm install
-npm run test
+## Running a node
 
-## Features
-- Smart-contract helpers
-- SDK utilities
-- API examples for onboarding
+See https://nimbus.guide for full instructions on running a node.
 
-## Badges
+To connect to mainnet with default options:
 
-![Reef Lint Governance](https://github.com/scutuatua-crypto/czonedive-core/actions/workflows/reef-lint-fail.yml/badge.svg)
-![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Mint Status](https://byob.yarr.is/scutuatua-crypto/czonedive-core/reef-mint)
+```bash
+./run-mainnet-beacon-node.sh
+```
 
+The script will forward all supplied options to the beacon node executable:
 
-git add README.md
-git commit -m "docs: add README template"
+```bash
+./run-mainnet-beacon-node.sh --log-level=DEBUG --tcp-port=9050
+```
 
----
+To monitor the Eth1 validator deposit contract, you'll need to pair
+the Nimbus beacon node with a Web3 provider capable of serving Eth1
+event logs. This could be a locally running Eth1 client such as Geth
+or a cloud service such as Infura. For more information please see
+our setup guides:
 
-## License
+https://status-im.github.io/nimbus-eth2/eth1.html
 
-MIT License
+By default, the script will ask you to enter a web3 provider URL interactively,
+but this can be bypassed by specifying a websocket `WEB3_URL` environment variable:
 
-Copyright (c) 2025 Chaisak / scutuatua-crypto
+```bash
+# using a local mainnet instance
+WEB3_URL="ws://localhost:8545" ./run-mainnet-beacon-node.sh
+```
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction...
+## Testnet
 
-[Full text continues in LICENSE.md]
+The `hoodi` testnet runs on
 
-
-## splash.log
-```markdown
-🌊 splash.log — Build, Test, Lint workflows committed to czonedive-core, reef-protect-main enforcing status checks
-🌊 Reef test PR — verifying status checks + Copilot review
-🌊 splash.log — Dummy PR reef-test-pr opened, workflows + Copilot review triggered, reef governance verified
-🌊 splash.log — Reef governance rehearsal complete, czonedive-core shielded with status checks + Copilot review
-🌊 splash.log — Build, Test, Lint workflows confirmed active, reef-protect-main enforcing status checks + Copilot review
-🌊 Reef Lint Fail Test — ทดสอบระบบบล็อก PR ด้วย Lint fail
-🌊 splash.log — Governance ritual closed, Boss WhaleTrucker confirmed “Ok”, system archived as completed milestone
-🌊 splash.log — index.js edited via direct link, governance workflow triggered, Boss WhaleTrucker logs echo across reef
-🌊 splash.log — index.js committed with dual governance logs, workflow trigger confirmed, reef block active
-🌊 splash.log — Actions tab opened, Reef Lint Fail Test run confirmed, governance fail wave visible
-🌊 splash.log — Actions tab confirmed, Reef Lint Fail Test runs and fails on every push, governance block active
-🌊 splash.log — reef-lint-fail.yml replaced with lint-first governance workflow, Boss WhaleTrucker commits reef logic
-🌊 splash.log — old workflow deleted, new conditional governance workflow pasted clean, reef logic active
-🌊 splash.log — conditional governance workflow active, Boss WhaleTrucker commits reef intelligence, auto-run confirmed
-🌊 splash.log — README.md updated with lint status badge, Boss WhaleTrucker surfs reef governance with visible Swagger
-🌊 splash.log — README.md badge section cleaned, governance badge stable, Swagger visibility restored
-🌊 splash.log — reef-mint.yml corrected with valid output syntax, badge logic active, Boss WhaleTrucker ready to commit reef mint
-🌊 splash.log — reef-mint.yml added with BYOB badge logic, README updated with dynamic NFT mint status
-🌊 splash.log — reef-mint.yml corrected with valid output, README.md updated with Mint Status badge, Boss WhaleTrucker ready to commit reef mint
-🌊 splash.log — reef-mint.yml cleaned and upgraded, old logic removed, badge-ready mint logic committed by Boss WhaleTrucker
-🌊 splash.log — reef-mint.yml replaced with valid badge logic, README.md updated, Boss WhaleTrucker commits reef mint status
-
-
-
+```bash
+# using a local hoodi instance
+build/nimbus_beacon_node \
+    --network=hoodi \
+    --data-dir=build/data/shared_hoodi_0 \
+    --web3-url="ws://localhost:8545"
+```
