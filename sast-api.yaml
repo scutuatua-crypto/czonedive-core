@@ -1,0 +1,3806 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@mend.io
+    name: Mend Support
+  description: Mend Static Application Security Testing Solution Web API
+  title: Mend SAST API
+  version: 24.9.2.5
+paths:
+  /api/applications:
+    get:
+      description: >-
+        Retrieve a list of all applications.
+
+
+        If summary is set to true then:
+
+        <ul>
+
+        <li><i>metrics.totalScans</i> is not set</li>
+
+        <li><i>metrics.fixedVulnerabilities</i> is not set</li>
+
+        <li><i>metrics.newVulnerabilities</i> is not set</li>
+
+        <li><i>metrics.newCritical</i> is not set</li>
+
+        <li><i>metrics.newHigh</i> is not set</li>
+
+        <li><i>metrics.newMedium</i> is not set</li>
+
+        <li><i>metrics.newLow</i> is not set</li>
+
+        <li><i>metrics.dateCounts</i> only contains data for the latest
+        scan</li>
+
+        </ul>
+      operationId: getApplications
+      parameters:
+        - description: >-
+            Return only general information if this parameter is set to
+            <em>true</em> (see description for details).
+          in: query
+          name: summary
+          schema:
+            type: boolean
+        - description: Number of applications to return. Can't be greater than 1000.
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: Page number, used in combination with <em>limit</em>.
+          in: query
+          name: page
+          schema:
+            type: integer
+        - description: >-
+            Narrow down the query to applications with names matching the
+            parameter value.
+          in: query
+          name: query
+          schema:
+            type: string
+        - description: >-
+            Find an application by name. <br>Response type changes to
+            models.Application.</br>
+          in: query
+          name: name
+          schema:
+            type: string
+        - description: >-
+            Return general information about all applications if this parameter
+            is set. <br>Response type changes to an array of
+            models.ApplicationEntry.</br>
+          in: query
+          name: list
+          schema:
+            type: boolean
+        - description: >-
+            Field by which to sort the list. Supported values: <em>name</em>,
+            <em>createdTime</em>, <em>lastScanTime</em> (default).
+          in: query
+          name: sort
+          schema:
+            type: string
+        - description: >-
+            Order direction. Supported values: <em>ascend</em>, <em>descend</em>
+            (default).
+          in: query
+          name: order
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.Application'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Name search didn't match any application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of applications.
+      tags:
+        - Applications
+    post:
+      description: Create a new application.
+      operationId: createApplication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.Application'
+        description: Application definition
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ApplicationCreatedResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '409':
+          description: Application name is already taken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create an application.
+      tags:
+        - Applications
+  /api/applications/{id}:
+    delete:
+      description: Delete an application by ID.
+      operationId: deleteApplication
+      parameters:
+        - description: Application ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown application ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete an application
+      tags:
+        - Applications
+    get:
+      description: Retrieve an application by ID.
+      operationId: getApplication
+      parameters:
+        - description: Application ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.Application'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown application ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get an application.
+      tags:
+        - Applications
+    put:
+      description: Update an application by ID.
+      operationId: updateApplication
+      parameters:
+        - description: Application ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.Application'
+        description: Updated application definition
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown application ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Update an application
+      tags:
+        - Applications
+  /api/applications/{id}/scans:
+    get:
+      description: Retrieve a list of application scans.
+      operationId: getApplicationScans
+      parameters:
+        - description: Application ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: >-
+            Return only general information if this parameter is set to
+            <em>true</em>.
+          in: query
+          name: summary
+          schema:
+            type: boolean
+        - description: Number of scans to return. Can't be greater than 1000.
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: Page number, used in combination with <em>limit</em>.
+          in: query
+          name: page
+          schema:
+            type: integer
+        - description: >-
+            Narrow down the query to scans with names matching the parameter
+            value.
+          in: query
+          name: query
+          schema:
+            type: string
+        - description: >-
+            Filter the scans by status. Comma-separated list of values is
+            accepted, e.g. <em>Finished,Running,Failed</em>.
+          in: query
+          name: filter
+          schema:
+            type: string
+        - description: >-
+            Field by which to sort the list. Supported values: <em>name</em>,
+            <em>createdTime</em> (default).
+          in: query
+          name: sort
+          schema:
+            type: string
+        - description: >-
+            Order direction. Supported values: <em>ascend</em>, <em>descend</em>
+            (default).
+          in: query
+          name: order
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.Scan'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown application ID or no scan matched the filtering criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get scans for an application
+      tags:
+        - Applications
+  /api/config/azuredevops:
+    get:
+      description: Get Azure DevOps issue tracking configuration.
+      operationId: getAzureDevOpsCredentials
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.AzureDevOpsCreds'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get Azure DevOps configuration
+      tags:
+        - Configurations
+    put:
+      description: >-
+        Create or update Azure DevOps configuration to be used when submitting
+        vulnerability issues.
+      operationId: createAzureDevOpsCredentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.AzureDevOpsCreds'
+        description: Azure DevOps configuration object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid or Azure DevOps server URL is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create or update Azure DevOps configuration.
+      tags:
+        - Configurations
+  /api/config/azuredevops/triggers:
+    get:
+      description: Get a list of all Azure DevOps triggers.
+      operationId: getAzureDevOpsTriggers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.ALMTrigger'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get Azure DevOps triggers.
+      tags:
+        - Configurations
+    post:
+      description: >-
+        Create an Azure DevOps trigger configuration to be used when submitting
+        vulnerability issues.
+      operationId: createAzureDevOpsTrigger
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.ALMTrigger'
+        description: Azure DevOps trigger to create
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create an Azure DevOps trigger configuration
+      tags:
+        - Configurations
+  /api/config/azuredevops/triggers/{id}:
+    delete:
+      description: Delete an Azure DevOps trigger configuration by ID.
+      operationId: deleteAzureDevOpsTrigger
+      parameters:
+        - description: Azure DevOps trigger ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown Azure DevOps trigger ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete an Azure DevOps trigger configuration
+      tags:
+        - Configurations
+    put:
+      description: Update an Azure DevOps trigger configuration by ID.
+      operationId: updateAzureDevOpsTrigger
+      parameters:
+        - description: Azure DevOps trigger ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/models.ALMTrigger'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown Azure DevOps trigger ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Update an Azure DevOps trigger configuration
+      tags:
+        - Configurations
+  /api/config/jira:
+    get:
+      description: Get Jira issue tracking configuration.
+      operationId: getJiraConfiguration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.JiraCreds'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get Jira configuration
+      tags:
+        - Configurations
+    put:
+      description: >-
+        Create or update Jira configuration to be used when submitting
+        vulnerability issues.
+      operationId: saveJiraCredentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.JiraCreds'
+        description: Jira configuration object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid or Jira server URL is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create or update Jira configuration.
+      tags:
+        - Configurations
+  /api/config/jira/triggers:
+    get:
+      description: Get configuration of triggers for Jira issue tracking.
+      operationId: getJiraTriggers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.ALMTrigger'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get Jira triggers configuration
+      tags:
+        - Configurations
+    post:
+      description: >-
+        Create Jira trigger configuration to be used when submitting
+        vulnerability issues.
+      operationId: createJiraTrigger
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.ALMTrigger'
+        description: Jira trigger to create
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create a Jira trigger configuration
+      tags:
+        - Configurations
+  /api/config/jira/triggers/{id}:
+    delete:
+      description: Delete a Jira trigger configuration by ID.
+      operationId: deleteJiraTrigger
+      parameters:
+        - description: Jira trigger ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown Jira trigger ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete a Jira trigger configuration
+      tags:
+        - Configurations
+    put:
+      description: Update a Jira trigger configuration by ID.
+      operationId: updateJiraTrigger
+      parameters:
+        - description: Jira trigger ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/models.ALMTrigger'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown Jira trigger ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Update a Jira trigger configuration
+      tags:
+        - Configurations
+  /api/engines:
+    get:
+      description: >-
+        Retrieves a list of available engines with supported programming
+        languages names and engine IDs. Engine ID is used in scan
+        configurations.
+      operationId: getEngines
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.Engine'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Gets a list of all SAST engines
+      tags:
+        - SAST Engines
+  /api/engines/{id}:
+    get:
+      description: >-
+        Retrieve engine details corresponding to ID parameter. The response
+        includes engine ID, supported language, a list of tracked variables and
+        a list of vulnerability types (name, risk level).
+      operationId: getEngine
+      parameters:
+        - description: Engine ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.Engine'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown engine ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a SAST engine
+      tags:
+        - SAST Engines
+  /api/groups:
+    get:
+      description: Get all user groups.
+      operationId: getGroups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.Group'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get user groups
+      tags:
+        - Groups
+    post:
+      description: Create a user group.
+      operationId: createGroup
+      requestBody:
+        $ref: '#/components/requestBodies/models.Group'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '409':
+          description: Group with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create a user group
+      tags:
+        - Groups
+  /api/groups/{id}:
+    delete:
+      description: Delete a user group by ID. Only empty user groups can be deleted.
+      operationId: deleteGroup
+      parameters:
+        - description: Group ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown group ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '409':
+          description: Group is not empty - remove all users from it before deleting it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete a group
+      tags:
+        - Groups
+    get:
+      description: Find a user group by ID.
+      operationId: getGroup
+      parameters:
+        - description: Group ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.Group'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown group ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a group
+      tags:
+        - Groups
+    put:
+      description: Update a user group by ID.
+      operationId: updateGroup
+      parameters:
+        - description: Group ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/models.Group'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown group ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Update a group
+      tags:
+        - Groups
+  /api/groups/{id}/remove/{userId}:
+    delete:
+      description: Remove a use rfrom a user group.
+      operationId: removeGroupMember
+      parameters:
+        - description: Group ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: User ID
+          in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown group ID or user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Remove a user from a group
+      tags:
+        - Groups
+    put:
+      description: Remove a use rfrom a user group.
+      operationId: addGroupMember
+      parameters:
+        - description: Group ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: User ID
+          in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown group ID or user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Add a user to a group
+      tags:
+        - Groups
+  /api/login:
+    post:
+      description: Log in to the application.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.Credentials'
+        description: User credentials
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.UserLoginResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Credentials are invalid or user doesn't have access to the system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      summary: User authentication endpoint.
+      tags:
+        - Users
+  /api/scans:
+    get:
+      description: Retrieve a list of scans.
+      operationId: getScans
+      parameters:
+        - description: >-
+            Return only general information if this parameter is set to
+            <em>true</em>.
+          in: query
+          name: summary
+          schema:
+            type: boolean
+        - description: Number of scans to return. Can't be greater than 1000.
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: Page number, used in combination with <em>limit</em>.
+          in: query
+          name: page
+          schema:
+            type: integer
+        - description: >-
+            Narrow down the query to scans with names matching the parameter
+            value.
+          in: query
+          name: query
+          schema:
+            type: string
+        - description: >-
+            Field by which to sort the list. Supported values: <em>name</em>,
+            <em>createdTime</em> (default).
+          in: query
+          name: sort
+          schema:
+            type: string
+        - description: >-
+            Order direction. Supported values: <em>ascend</em>, <em>descend</em>
+            (default).
+          in: query
+          name: order
+          schema:
+            type: string
+        - description: >-
+            Filter the scans by status. Comma-separated list of values is
+            accepted, e.g. <em>Finished,Running,Failed</em>.
+          in: query
+          name: filter
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.Scan'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of scans
+      tags:
+        - Scans
+  /api/scans/{id}:
+    delete:
+      description: Delete a scan by ID.
+      operationId: deleteScan
+      parameters:
+        - description: Scan ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete a scan
+      tags:
+        - Scans
+  /api/templates:
+    get:
+      description: Get a list of scan configuration templates.
+      operationId: getScanTemplates
+      parameters:
+        - description: >-
+            Find a template by name. <br>Response type changes to
+            models.ScanTemplate.</br>
+          in: query
+          name: name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.ScanTemplate'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Name search didn't match any template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get scan configuration templates
+      tags:
+        - Templates
+    post:
+      description: Create a scan template configuration.
+      operationId: createScanTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.ScanTemplate'
+        description: Scan template to create
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '409':
+          description: Scan template with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create a scan template
+      tags:
+        - Templates
+  /api/templates/{id}:
+    delete:
+      description: Delete a scan template by ID.
+      operationId: deleteScanTemplate
+      parameters:
+        - description: Scan template ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown scan template ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete a scan template.
+      tags:
+        - Templates
+    get:
+      description: Find a scan template by ID.
+      operationId: getScanTemplate
+      parameters:
+        - description: Scan template ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.ScanTemplate'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown scan template ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a scan template by ID
+      tags:
+        - Templates
+  /api/users:
+    get:
+      description: Get a list of users.
+      operationId: getUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/models.User'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of users.
+      tags:
+        - Users
+    post:
+      description: Create a user.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.User'
+        description: User to create
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Create a user.
+      tags:
+        - Users
+  /api/users/{id}:
+    delete:
+      description: Delete a user by ID.
+      operationId: deleteUser
+      parameters:
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Delete a user
+      tags:
+        - Users
+    get:
+      description: Find a user by ID.
+      operationId: getUser
+      parameters:
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/models.User'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Unknown user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a user.
+      tags:
+        - Users
+    put:
+      description: Update a user by ID.
+      operationId: updateUser
+      parameters:
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/models.User'
+        description: Updated user object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Request body is invalid or user doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Update a user
+      tags:
+        - Users
+  /api/v2/scans/{scanId}:
+    get:
+      description: Get a scan by ID.
+      operationId: getScanV2
+      parameters:
+        - description: ID of the scan to get
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.Scan'
+        '400':
+          description: Missing scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Scan doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a scan
+      tags:
+        - Scans
+  /api/v2/scans/{scanId}/bulk/findings:
+    patch:
+      description: Selectively update multiple findings.
+      operationId: bulkPatchFindingV2
+      parameters:
+        - description: ID of the scan in which the findings to update exist
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.BulkPatchFinding'
+        description: >-
+          DTO with finding properties to update (unset properties will not be
+          changed)
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: >-
+            Missing scan ID, no findings provided or invalid update operation in
+            the DTO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: >-
+            Scan doesn't exist, authorized user doesn't have access to it or one
+            of the findings doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Selectively update multiple findings
+      tags:
+        - Findings
+  /api/v2/scans/{scanId}/config:
+    get:
+      description: Get configuration of a scan with an ID.
+      operationId: getScanConfigV2
+      parameters:
+        - description: ID of the scan for which to get configuration
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ScanConfig'
+        '400':
+          description: Missing scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Scan doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get configuration of a scan
+      tags:
+        - Scans
+  /api/v2/scans/{scanId}/difference/{previousScanId}:
+    get:
+      description: Retrieve a list of newly introduced and/or resolved findings.
+      operationId: getScanDifferenceV2
+      parameters:
+        - description: ID of the first scan
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - description: >-
+            ID of the second (previous) scan. It has to identify a scan that is
+            older than the one identified by scanId.
+          in: path
+          name: previousScanId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ScanDifferenceResponse'
+        '400':
+          description: Invalid previous scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: >-
+            Scan doesn't exist, user doesn't have access to it, previous scan
+            doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a difference in findings between two scans
+      tags:
+        - Scans
+  /api/v2/scans/{scanId}/findings:
+    get:
+      description: Get a list of findings of a scan with an ID.
+      operationId: listScanFindingsV2
+      parameters:
+        - description: ID of the scan for which to get findings
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/dto.Finding'
+                type: array
+        '400':
+          description: Missing scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Scan doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of scan findings
+      tags:
+        - Scans
+        - Findings
+  /api/v2/scans/{scanId}/findings/{findingId}:
+    patch:
+      description: Selectively update a finding.
+      operationId: patchFindingV2
+      parameters:
+        - description: ID of the scan in which the finding to update exists
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - description: ID of the finding to update
+          in: path
+          name: findingId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.PatchFinding'
+        description: >-
+          DTO with finding properties to update (unset properties will not be
+          changed)
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: >-
+            Missing scan ID, missing finding ID or invalid update operation in
+            the DTO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: >-
+            Scan doesn't exist, authorized user doesn't have access to it or
+            finding doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Selectively update a finding
+      tags:
+        - Findings
+  /api/v2/scans/{scanId}/findings/{findingId}/comments:
+    post:
+      description: Post a comment under a finding in a scan.
+      operationId: postFindingCommentV2
+      parameters:
+        - description: ID of the scan for which the comment is posted
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - description: ID of the finding in which the comment is posted
+          in: path
+          name: findingId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dto.PostFindingComment'
+        description: Definition of the comment to post
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.SuccessResponse'
+        '400':
+          description: Missing scan ID, missing finding ID or invalid comment definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: >-
+            Scan doesn't exist, authorized user doesn't have access to it or
+            finding doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Post a comment under a finding
+      tags:
+        - Findings
+  /api/v2/scans/{scanId}/findings/{findingId}/data-flows:
+    get:
+      description: Get a list of data flows of a finding in a scan.
+      operationId: listFindingDataFlowsV2
+      parameters:
+        - description: ID of the scan for which to get data flows
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - description: ID of the finding for which to get data flows
+          in: path
+          name: findingId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/dto.DataFlow'
+                type: array
+        '400':
+          description: Missing scan ID or finding ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: >-
+            Scan doesn't exist, authorized user doesn't have access to it or
+            finding doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of finding data flows
+      tags:
+        - Scans
+        - Findings
+        - Data flows
+  /api/v2/scans/{scanId}/prioritized-findings:
+    get:
+      description: Retrieve a list of findings prioritized by rating.
+      operationId: listPrioritizedScanFindingsV2
+      parameters:
+        - description: Scan ID
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - description: >-
+            Number of findings to return. Has to be positive and can't be
+            greater than 1000.
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: Narrow down the search to a single engine
+          in: query
+          name: engineId
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/dto.Finding'
+                type: array
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Scan doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '500':
+          description: Error while processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Find the highest priority findings.
+      tags:
+        - Scans
+        - Findings
+  /api/v2/scans/{scanId}/vulnerability-types:
+    get:
+      description: Retrieve a list of vulnerability types registered in a scan.
+      operationId: listScanVulnerabilityTypesV2
+      parameters:
+        - description: ID of the scan for which to get vulnerability types
+          in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/dto.VulnerabilityTypeDefinition'
+                type: array
+        '400':
+          description: Missing scan ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+        '404':
+          description: Scan doesn't exist or user doesn't have access to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+        - Bearer: []
+      summary: Get a list of scan's vulnerability types
+      tags:
+        - Scans
+servers:
+  - url: /sast
+components:
+  requestBodies:
+    models.Group:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/models.Group'
+      description: Group to create
+      required: true
+    models.ALMTrigger:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/models.ALMTrigger'
+      description: Updated Jira trigger object
+      required: true
+  securitySchemes:
+    ApiKeyAuth:
+      description: >-
+        API token taken from the <b>Settings | API TOKEN</b> page in the web
+        application<br><b>Recommended for direct communication with the API</b>
+      in: header
+      name: X-Auth-Token
+      type: apiKey
+    Bearer:
+      description: >-
+        Access token obtained via login endpoint<br>Remember to add the
+        <b>Bearer</b> prefix to the header, e.g. <b>Bearer &lt;token&gt;</b>
+      in: header
+      name: Authorization
+      type: apiKey
+  schemas:
+    dto.ApplicationCreatedResponse:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    dto.AzureDevOpsWorkItem:
+      properties:
+        project:
+          type: string
+        workItemId:
+          type: integer
+      type: object
+    dto.BulkPatchFinding:
+      properties:
+        findings:
+          description: IDs of findings to modify.
+          items:
+            type: string
+          type: array
+        patchOperation:
+          $ref: '#/components/schemas/dto.PatchFinding'
+      type: object
+    dto.CallStackItem:
+      properties:
+        endLine:
+          type: integer
+        file:
+          type: string
+        kind:
+          type: string
+        line:
+          type: integer
+        name:
+          type: string
+        snippet:
+          type: string
+        startLine:
+          type: integer
+      type: object
+    dto.CapecInfo:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+      type: object
+    dto.Commit:
+      properties:
+        id:
+          type: string
+      type: object
+    dto.CustomEngineFilter:
+      properties:
+        filterId:
+          type: string
+        functionName:
+          type: string
+        paramIndex:
+          type: integer
+        parameterCount:
+          type: integer
+      type: object
+    dto.CustomEngineRule:
+      properties:
+        description:
+          type: string
+        functionName:
+          type: string
+        parameterCount:
+          type: integer
+        vulnParamIndex:
+          type: integer
+        vulnTypeIndex:
+          type: integer
+      type: object
+    dto.CweInfo:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+      type: object
+    dto.DataFlow:
+      properties:
+        ageRating:
+          description: Between 0 and 10
+          type: number
+        confidenceRating:
+          description: Between 0 and 10
+          type: number
+        createdTime:
+          type: string
+        filter:
+          $ref: '#/components/schemas/dto.Filter'
+        functionCalls:
+          items:
+            $ref: '#/components/schemas/dto.CallStackItem'
+          type: array
+        id:
+          type: string
+        inputFlow:
+          items:
+            $ref: '#/components/schemas/dto.CallStackItem'
+          type: array
+        inputKind:
+          type: string
+        inputSource:
+          type: string
+        isNew:
+          type: boolean
+        rating:
+          description: Between 0 and 10
+          type: number
+        sink:
+          type: string
+        sinkFile:
+          type: string
+        sinkKind:
+          type: string
+        sinkLine:
+          type: integer
+        sinkSnippet:
+          type: string
+      type: object
+    dto.DataFlowSummary:
+      properties:
+        file:
+          type: string
+        id:
+          type: string
+        isNew:
+          type: boolean
+        line:
+          type: integer
+        rating:
+          description: Between 0 and 10
+          type: number
+        stepsCount:
+          type: integer
+      type: object
+    dto.EngineConfig:
+      properties:
+        customFilters:
+          items:
+            $ref: '#/components/schemas/dto.CustomEngineFilter'
+          type: array
+        customRules:
+          items:
+            $ref: '#/components/schemas/dto.CustomEngineRule'
+          type: array
+        depth:
+          $ref: '#/components/schemas/dto.EngineScanDepth'
+        engineId:
+          type: integer
+        excludedVulnTypes:
+          description: IDs of excluded vulnerability types
+          items:
+            type: integer
+          type: array
+        severityLevels:
+          items:
+            $ref: '#/components/schemas/dto.EngineSeverityLevel'
+          type: array
+        trackedInputs:
+          items:
+            type: string
+          type: array
+      type: object
+    dto.EngineScanDepth:
+      properties:
+        maxFunctionDepth:
+          type: integer
+        maxVariableTrack:
+          type: integer
+      type: object
+    dto.EngineSeverityLevel:
+      properties:
+        severity:
+          type: string
+        vulnTypeId:
+          type: integer
+      type: object
+    dto.ErrorResponse:
+      properties:
+        message:
+          example: Something went wrong
+          type: string
+        result:
+          example: error
+          type: string
+        success:
+          example: false
+          type: boolean
+      type: object
+    dto.Filter:
+      properties:
+        filterTypes:
+          items:
+            $ref: '#/components/schemas/dto.FilterType'
+          type: array
+        isFiltered:
+          type: boolean
+      type: object
+    dto.FilterType:
+      properties:
+        code:
+          type: integer
+        name:
+          type: string
+      type: object
+    dto.Finding:
+      properties:
+        ageRating:
+          description: Between 0 and 10
+          type: number
+        almIssues:
+          $ref: '#/components/schemas/dto.FindingAlmIssues'
+        appId:
+          type: string
+        baseline:
+          type: boolean
+        comments:
+          items:
+            $ref: '#/components/schemas/dto.FindingComment'
+          type: array
+        confidenceRating:
+          description: Between 0 and 10
+          type: number
+        createdTime:
+          type: string
+        dataFlows:
+          items:
+            $ref: '#/components/schemas/dto.DataFlowSummary'
+          type: array
+        description:
+          type: string
+        hasRemediation:
+          type: boolean
+        id:
+          description: Uniquely identifies the finding across multiple scans
+          type: string
+        isNew:
+          type: boolean
+        projectId:
+          type: string
+        rating:
+          description: Between 0 and 10
+          type: number
+        reviewed:
+          type: boolean
+        scanId:
+          description: Uniquely identifies the scan this finding was loaded from
+          type: string
+        severity:
+          type: string
+        severityRating:
+          description: Between 0 and 10
+          type: number
+        sharedStep:
+          $ref: '#/components/schemas/dto.FindingSharedStep'
+        snapshotId:
+          description: >-
+            Uniquely identifies the finding within a scan, it's equivalent to
+            the pair of <em>id</em> and <em>scanId</em>
+          type: string
+        suppressed:
+          type: boolean
+        suppressedBy:
+          type: string
+        suppressionMessage:
+          description: Always empty if suppressed is not set
+          type: string
+        suppressionTime:
+          type: string
+        type:
+          $ref: '#/components/schemas/dto.VulnerabilityType'
+        workflowViolations:
+          items:
+            $ref: '#/components/schemas/dto.Workflow'
+          type: array
+        workflowViolationsCount:
+          type: integer
+      type: object
+    dto.FindingAlmIssues:
+      properties:
+        azure:
+          $ref: '#/components/schemas/dto.AzureDevOpsWorkItem'
+        jira:
+          $ref: '#/components/schemas/dto.JiraIssue'
+        jiraPlatform:
+          $ref: '#/components/schemas/dto.JiraPlatformIssue'
+      type: object
+    dto.FindingComment:
+      properties:
+        body:
+          type: string
+        createdBy:
+          type: string
+        createdTime:
+          type: string
+      type: object
+    dto.FindingSharedStep:
+      properties:
+        endLine:
+          type: integer
+        file:
+          type: string
+        kind:
+          type: string
+        line:
+          type: integer
+        lineBlame:
+          $ref: '#/components/schemas/dto.LineBlame'
+        name:
+          type: string
+        snippet:
+          type: string
+        startLine:
+          type: integer
+      type: object
+    dto.HipaaInfo:
+      properties:
+        control:
+          type: string
+        title:
+          type: string
+      type: object
+    dto.HitrustInfo:
+      properties:
+        control:
+          type: string
+        title:
+          type: string
+      type: object
+    dto.JiraIssue:
+      properties:
+        issueId:
+          type: string
+        project:
+          type: string
+      type: object
+    dto.JiraPlatformIssue:
+      properties:
+        createdBy:
+          type: string
+        createdByName:
+          type: string
+        createdTime:
+          type: string
+        internalStatus:
+          type: string
+        issueKey:
+          type: string
+        issueStatus:
+          type: string
+        publicLink:
+          type: string
+      type: object
+    dto.LineBlame:
+      properties:
+        commitId:
+          type: string
+        file:
+          type: string
+        line:
+          type: integer
+      type: object
+    dto.NistInfo:
+      properties:
+        control:
+          type: string
+        priority:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+      type: object
+    dto.Owasp2021Info:
+      properties:
+        index:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+      type: object
+    dto.OwaspInfo:
+      properties:
+        index:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+      type: object
+    dto.PatchFinding:
+      properties:
+        customSeverity:
+          description: >-
+            If set, it has to be either <em>High</em>, <em>Medium</em> or
+            <em>Low</em>.
+
+            Case insensitive, all values are converted to have the first letter
+            uppercase and others lowercase, e.g. <em>High</em>.
+          type: string
+        reviewed:
+          type: boolean
+        suppressed:
+          type: boolean
+        suppressionReason:
+          description: >-
+            Has to be unset or empty if <b>suppressed</b> is not set or if it's
+            false.
+          type: string
+      type: object
+    dto.PcidssInfo:
+      properties:
+        section:
+          type: string
+        title:
+          type: string
+      type: object
+    dto.PostFindingComment:
+      properties:
+        body:
+          type: string
+      type: object
+    dto.SansTop25Info:
+      properties:
+        rank:
+          type: integer
+        title:
+          type: string
+      type: object
+    dto.Scan:
+      properties:
+        createdBy:
+          type: string
+        createdTime:
+          type: string
+        id:
+          type: string
+        languages:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        name:
+          type: string
+        parentAppId:
+          type: string
+        parentAppName:
+          type: string
+        scm:
+          $ref: '#/components/schemas/dto.Scm'
+        stats:
+          $ref: '#/components/schemas/dto.ScanStats'
+        status:
+          type: string
+        versionFlag:
+          type: string
+      type: object
+    dto.ScanConfig:
+      properties:
+        almTrigger:
+          type: string
+        emailTrigger:
+          type: string
+        engineParams:
+          items:
+            $ref: '#/components/schemas/dto.EngineConfig'
+          type: array
+        engines:
+          items:
+            type: integer
+          type: array
+        exclusions:
+          items:
+            type: string
+          type: array
+        incremental:
+          type: boolean
+        slackTrigger:
+          type: string
+        target:
+          $ref: '#/components/schemas/dto.ScanTarget'
+      type: object
+    dto.ScanDifferenceResponse:
+      properties:
+        newFindings:
+          items:
+            $ref: '#/components/schemas/models.Vulnerability'
+          type: array
+        resolvedFindings:
+          items:
+            $ref: '#/components/schemas/models.Vulnerability'
+          type: array
+      type: object
+    dto.ScanStats:
+      properties:
+        criticalSeverityFindingsCount:
+          type: integer
+        dataFlowsCount:
+          type: integer
+        duration:
+          type: string
+        findingsCount:
+          type: integer
+        highSeverityFindingsCount:
+          type: integer
+        lowSeverityFindingsCount:
+          type: integer
+        mediumSeverityFindingsCount:
+          type: integer
+        testedFiles:
+          type: integer
+        testedLines:
+          type: integer
+        totalFiles:
+          type: integer
+        totalLines:
+          type: integer
+      type: object
+    dto.ScanTarget:
+      properties:
+        path:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      type: object
+    dto.Scm:
+      properties:
+        commit:
+          $ref: '#/components/schemas/dto.Commit'
+      type: object
+    dto.SuccessResponse:
+      properties:
+        message:
+          example: Operation succeeded
+          type: string
+        result: {}
+        success:
+          example: true
+          type: boolean
+      type: object
+    dto.UserLoginResponse:
+      properties:
+        orgId:
+          type: string
+        refreshToken:
+          type: string
+        role:
+          type: integer
+        systemRole:
+          type: integer
+        token:
+          type: string
+        tokenType:
+          type: string
+        username:
+          type: string
+      type: object
+    dto.VulnerabilityType:
+      properties:
+        commonId:
+          type: string
+        engineId:
+          type: integer
+        id:
+          type: integer
+        language:
+          type: string
+        name:
+          type: string
+        sarif:
+          type: string
+        sarifLevel:
+          type: string
+      type: object
+    dto.VulnerabilityTypeDefinition:
+      properties:
+        capec:
+          $ref: '#/components/schemas/dto.CapecInfo'
+        commonId:
+          type: string
+        cwe:
+          $ref: '#/components/schemas/dto.CweInfo'
+        description:
+          type: string
+        engineId:
+          type: integer
+        hipaa:
+          $ref: '#/components/schemas/dto.HipaaInfo'
+        hitrust:
+          $ref: '#/components/schemas/dto.HitrustInfo'
+        id:
+          type: integer
+        language:
+          type: string
+        name:
+          type: string
+        nist:
+          $ref: '#/components/schemas/dto.NistInfo'
+        order:
+          type: integer
+        owasp:
+          $ref: '#/components/schemas/dto.OwaspInfo'
+        owasp2021:
+          $ref: '#/components/schemas/dto.Owasp2021Info'
+        pcidss:
+          $ref: '#/components/schemas/dto.PcidssInfo'
+        recommendations:
+          items:
+            type: string
+          type: array
+        references:
+          items:
+            type: string
+          type: array
+        sansTop25:
+          $ref: '#/components/schemas/dto.SansTop25Info'
+        sarif:
+          type: string
+        sarifLevel:
+          type: string
+        severity:
+          type: string
+        severityRating:
+          type: number
+      type: object
+    dto.Workflow:
+      properties:
+        name:
+          type: string
+        uuid:
+          type: string
+      type: object
+    models.ALMTrigger:
+      properties:
+        assignedApps:
+          items:
+            $ref: '#/components/schemas/models.ApplicationEntry'
+          type: array
+        condition:
+          $ref: '#/components/schemas/models.TriggerCondition'
+        createdBy:
+          type: string
+        description:
+          type: string
+        groupVisibility:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        itemType:
+          type: string
+        name:
+          type: string
+        projectName:
+          type: string
+      type: object
+    models.AppMetrics:
+      properties:
+        dateCounts:
+          items:
+            $ref: '#/components/schemas/models.DateCount'
+          type: array
+        fixedVulnerabilities:
+          type: integer
+        latestLanguages:
+          items:
+            type: string
+          type: array
+        latestScanId:
+          type: string
+        latestStats:
+          properties:
+            duration:
+              type: string
+            message:
+              type: string
+            status:
+              type: string
+            testedFiles:
+              type: integer
+            testedLines:
+              type: integer
+            totalDataFlows:
+              type: integer
+            totalFiles:
+              type: integer
+            totalLines:
+              type: integer
+            totalVulnerabilities:
+              type: integer
+          type: object
+        newCritical:
+          type: integer
+        newHigh:
+          type: integer
+        newLow:
+          type: integer
+        newMedium:
+          type: integer
+        newVulnerabilities:
+          type: integer
+        totalScans:
+          type: integer
+      type: object
+    models.Application:
+      properties:
+        basePath:
+          type: string
+        createdBy:
+          type: string
+        createdTime:
+          type: string
+        groupVisibility:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        lastScanMessage:
+          type: string
+        lastScanStatus:
+          type: string
+        lastScanTime:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/models.AppMetrics'
+        name:
+          type: string
+        orgId:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/models.ScanParameters'
+        policyId:
+          type: string
+        productId:
+          type: string
+        retention:
+          type: integer
+      required:
+        - name
+      type: object
+    models.ApplicationEntry:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        parameters:
+          properties:
+            almTrigger:
+              type: string
+            emailTrigger:
+              type: string
+            slackTrigger:
+              type: string
+          type: object
+        policyId:
+          type: string
+      type: object
+    models.AzureDevOpsCreds:
+      properties:
+        accessToken:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+        orgId:
+          type: string
+        serverUrl:
+          type: string
+      type: object
+    models.Branch:
+      properties:
+        name:
+          description: Local branch name.
+          type: string
+        type:
+          description: Branch type - base or feature branch
+          type: string
+        upstream:
+          allOf:
+            - $ref: '#/components/schemas/models.Upstream'
+          description: >-
+            Information about an upstream branch tracking the local branch
+            (optional - there may be no upstream).
+      type: object
+    models.CallStackItem:
+      properties:
+        file:
+          type: string
+        kind:
+          type: string
+        line:
+          type: string
+        name:
+          type: string
+        snippet:
+          type: string
+        startLine:
+          type: integer
+      type: object
+    models.Comment:
+      properties:
+        body:
+          type: string
+        createdBy:
+          type: string
+        createdTime:
+          type: string
+      type: object
+    models.Commit:
+      properties:
+        Id:
+          description: ID (hash) of the scanned commit.
+          type: string
+        Time:
+          description: Time of the last commit
+          type: string
+      type: object
+    models.Credentials:
+      properties:
+        oldPassword:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+      type: object
+    models.CustomFilter:
+      properties:
+        filterId:
+          type: string
+        functionName:
+          type: string
+        paramIndex:
+          type: integer
+        parameterCount:
+          type: integer
+      type: object
+    models.CustomRule:
+      properties:
+        description:
+          type: string
+        functionName:
+          type: string
+        parameterCount:
+          type: integer
+        vulnParamIndex:
+          type: integer
+        vulnTypeIndex:
+          type: integer
+      type: object
+    models.DateCount:
+      properties:
+        counts:
+          $ref: '#/components/schemas/models.ScanCount'
+        date:
+          type: string
+      type: object
+    models.Engine:
+      properties:
+        clocLanguageOptionNames:
+          items:
+            type: string
+          type: array
+        defaultDepth:
+          properties:
+            maxFunctionDepth:
+              type: integer
+            maxVariableTrack:
+              type: integer
+          type: object
+        defaultExclusions:
+          items:
+            type: string
+          type: array
+        executable:
+          type: string
+        extensions:
+          items:
+            properties:
+              clocOptionName:
+                type: string
+              literal:
+                type: string
+              pattern:
+                type: string
+              requiresFeatureFlags:
+                items:
+                  type: string
+                type: array
+              useForEngineConfiguration:
+                type: boolean
+              useForLanguageDetection:
+                type: boolean
+              useForLineCounting:
+                type: boolean
+            type: object
+          type: array
+        id:
+          type: integer
+        ipcPort:
+          type: string
+        language:
+          type: string
+        languageName:
+          type: string
+        tempDirectory:
+          type: string
+        trackedInputs:
+          items:
+            type: string
+          type: array
+        vulnerabilityTypes:
+          items:
+            $ref: '#/components/schemas/models.VulnerabilityType'
+          type: array
+      type: object
+    models.EngineResults:
+      properties:
+        engineId:
+          type: integer
+        language:
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/models.VulnerabilityTypeResult'
+          type: array
+      type: object
+    models.EngineStats:
+      properties:
+        duration:
+          type: string
+        exitCode:
+          type: integer
+        findings:
+          type: integer
+        id:
+          type: integer
+        incremental:
+          type: boolean
+        language:
+          type: string
+        libraryFiles:
+          items:
+            type: string
+          type: array
+        missingDependency:
+          type: string
+        noEntryPointsFound:
+          type: boolean
+        numOfScannedFiles:
+          type: integer
+        startTimestamp:
+          type: string
+        status:
+          type: string
+        statusMessage:
+          type: string
+        terminatedByWatchDog:
+          type: boolean
+        testedFiles:
+          type: integer
+        testedLines:
+          type: integer
+        timeoutFiles:
+          items:
+            type: string
+          type: array
+        totalFiles:
+          type: integer
+        totalLines:
+          type: integer
+      type: object
+    models.Filter:
+      properties:
+        filterTypes:
+          items:
+            $ref: '#/components/schemas/models.FilterType'
+          type: array
+        isFiltered:
+          type: boolean
+      type: object
+    models.FilterType:
+      properties:
+        code:
+          type: integer
+        name:
+          type: string
+      type: object
+    models.Group:
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        members:
+          items:
+            $ref: '#/components/schemas/models.ShortMember'
+          type: array
+        name:
+          type: string
+        orgId:
+          type: string
+      required:
+        - name
+      type: object
+    models.JiraCreds:
+      properties:
+        authType:
+          type: string
+        createdBy:
+          type: string
+        jiraServer:
+          type: string
+        orgId:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+      type: object
+    models.Metadata:
+      properties:
+        applicationName:
+          type: string
+        projectName:
+          type: string
+      type: object
+    models.Remote:
+      properties:
+        defaultBranch:
+          description: >-
+            Introduced for the purposes of Unified Platform migration, can be
+            changed/removed after.
+          type: string
+        hasCommit:
+          description: Whether the scanned commit was found in the remote.
+          type: boolean
+        name:
+          description: How the remote was named in the repository.
+          type: string
+        type:
+          type: string
+        url:
+          allOf:
+            - $ref: '#/components/schemas/models.ScmUrl'
+          description: URL of the remote.
+      type: object
+    models.SASTParameters:
+      properties:
+        customFilters:
+          items:
+            $ref: '#/components/schemas/models.CustomFilter'
+          type: array
+        customRules:
+          items:
+            $ref: '#/components/schemas/models.CustomRule'
+          type: array
+        depth:
+          $ref: '#/components/schemas/models.ScanDepth'
+        engineId:
+          type: integer
+        excludedVulnTypes:
+          items:
+            type: integer
+          type: array
+        severityLevels:
+          items:
+            $ref: '#/components/schemas/models.SeverityLevel'
+          type: array
+        trackedInputs:
+          items:
+            type: string
+          type: array
+      type: object
+    models.SansTop25:
+      properties:
+        rank:
+          type: integer
+        title:
+          type: string
+      type: object
+    models.Scan:
+      properties:
+        activeCliFeatures:
+          items:
+            type: string
+          type: array
+        createdBy:
+          type: string
+        createdTime:
+          type: string
+        currentLanguage:
+          type: string
+        expiration:
+          type: string
+        groupVisibility:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        languages:
+          items:
+            type: string
+          type: array
+        lastUpdateTime:
+          type: string
+        logCtx:
+          type: string
+        markedForDeletion:
+          type: boolean
+        message:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/models.Metadata'
+        name:
+          type: string
+        orgId:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/models.ScanParameters'
+        parentAppId:
+          type: string
+        parentAppName:
+          type: string
+        platform:
+          type: string
+        productId:
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/models.EngineResults'
+          type: array
+        scm:
+          $ref: '#/components/schemas/models.Scm'
+        startTime:
+          type: string
+        stats:
+          $ref: '#/components/schemas/models.ScanStats'
+        status:
+          type: string
+        versionFlag:
+          type: string
+      required:
+        - name
+      type: object
+    models.ScanCount:
+      properties:
+        capec:
+          type: integer
+        critical:
+          type: integer
+        high:
+          type: integer
+        hipaa:
+          type: integer
+        hitrust:
+          type: integer
+        locPerIssue:
+          type: integer
+        low:
+          type: integer
+        medium:
+          type: integer
+        nist:
+          type: integer
+        owasp:
+          type: integer
+        owasp2021:
+          type: integer
+        pcidss:
+          type: integer
+        sansTop25:
+          type: integer
+        totalVulnerabilities:
+          type: integer
+        vulnTypeCount:
+          type: integer
+      type: object
+    models.ScanDepth:
+      properties:
+        maxFunctionDepth:
+          type: integer
+        maxVariableTrack:
+          type: integer
+      type: object
+    models.ScanParameters:
+      properties:
+        almTrigger:
+          type: string
+        configurationId:
+          type: string
+        configurationName:
+          type: string
+        emailTrigger:
+          type: string
+        engineParams:
+          items:
+            $ref: '#/components/schemas/models.SASTParameters'
+          type: array
+        engines:
+          items:
+            type: integer
+          type: array
+        exclusions:
+          items:
+            type: string
+          type: array
+        ignoreStoredFP:
+          type: boolean
+        incremental:
+          type: boolean
+        slackTrigger:
+          type: string
+        target:
+          $ref: '#/components/schemas/models.Target'
+      type: object
+    models.ScanStats:
+      properties:
+        critical:
+          type: integer
+        duration:
+          type: string
+        engines:
+          items:
+            $ref: '#/components/schemas/models.EngineStats'
+          type: array
+        high:
+          type: integer
+        low:
+          type: integer
+        medium:
+          type: integer
+        repoDerivedTimeout:
+          type: boolean
+        resources:
+          properties:
+            cpu:
+              type: integer
+            memory:
+              type: integer
+            os:
+              type: string
+          type: object
+        testedFiles:
+          type: integer
+        testedLines:
+          type: integer
+        timeoutExceeded:
+          type: boolean
+        totalFiles:
+          type: integer
+        totalLines:
+          type: integer
+        totalVulnerabilities:
+          type: integer
+      type: object
+    models.ScanTemplate:
+      properties:
+        createdBy:
+          type: string
+        groupVisibility:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        name:
+          type: string
+        orgId:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/models.ScanParameters'
+      type: object
+    models.Scm:
+      properties:
+        branch:
+          allOf:
+            - $ref: '#/components/schemas/models.Branch'
+          description: >-
+            Information about the checked out branch (optional - a commit or a
+            tag may be checked out instead).
+        commit:
+          allOf:
+            - $ref: '#/components/schemas/models.Commit'
+          description: Scanned commit details
+        openedSubDirectoryPath:
+          type: string
+        remotes:
+          description: Remotes defined in the repository.
+          items:
+            $ref: '#/components/schemas/models.Remote'
+          type: array
+      type: object
+    models.ScmUrl:
+      properties:
+        host:
+          description: With username/password removed.
+          type: string
+        path:
+          description: With .git suffix removed if it was specified.
+          type: string
+        port:
+          description: 0 if it wasn't specified in the URL.
+          type: integer
+        scheme:
+          description: ssh for the implicit SSH in scp-like git URL.
+          type: string
+      type: object
+    models.SeverityLevel:
+      properties:
+        severity:
+          type: string
+        vulnTypeId:
+          type: integer
+      type: object
+    models.ShortGroup:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    models.ShortMember:
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+      type: object
+    models.StoredAzureIssue:
+      properties:
+        project:
+          type: string
+        workItemId:
+          type: integer
+      type: object
+    models.StoredJiraIssue:
+      properties:
+        issueId:
+          type: string
+        project:
+          type: string
+      type: object
+    models.Target:
+      properties:
+        path:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      type: object
+    models.TriggerCondition:
+      properties:
+        findingsRating:
+          type: boolean
+        findingsRatingTrigger:
+          type: number
+        highRiskCount:
+          type: boolean
+        highRiskCountTrigger:
+          type: integer
+        lowRiskCount:
+          type: boolean
+        lowRiskCountTrigger:
+          type: integer
+        mediumRiskCount:
+          type: boolean
+        mediumRiskCountTrigger:
+          type: integer
+        noVulnerabilities:
+          type: boolean
+        totalCount:
+          type: boolean
+        totalCountTrigger:
+          type: integer
+        vulnTypeFound:
+          type: boolean
+        vulnTypeTrigger:
+          type: integer
+      type: object
+    models.Upstream:
+      properties:
+        branch:
+          description: Name of the upstream branch tracking the local branch.
+          type: string
+        isPushed:
+          description: Whether the scanned commit was pushed to the upstream branch.
+          type: boolean
+        remoteName:
+          description: >-
+            Name of the remote associated with this branch. One of the remotes
+            in SCM.Remotes may correspond to it, but it's not guaranteed it
+
+            was possible to get that data during analysis.
+          type: string
+      type: object
+    models.User:
+      properties:
+        apiToken:
+          type: string
+        createdTime:
+          type: string
+        email:
+          type: string
+        groups:
+          items:
+            $ref: '#/components/schemas/models.ShortGroup'
+          type: array
+        id:
+          type: string
+        integrated:
+          type: boolean
+        lastLogin:
+          type: string
+        lastOrgLogin:
+          type: string
+        name:
+          type: string
+        oldPassword:
+          type: string
+        orgId:
+          type: string
+        password:
+          type: string
+        role:
+          type: integer
+        service:
+          type: boolean
+        username:
+          type: string
+      required:
+        - email
+        - name
+        - username
+      type: object
+    models.Vulnerability:
+      properties:
+        ageRating:
+          type: number
+        azureIssue:
+          $ref: '#/components/schemas/models.StoredAzureIssue'
+        baselineFinding:
+          type: boolean
+        comments:
+          items:
+            $ref: '#/components/schemas/models.Comment'
+          type: array
+        confidence:
+          type: integer
+        createdTime:
+          type: string
+        description:
+          type: string
+        expiration:
+          type: string
+        falsepositive:
+          type: boolean
+        filter:
+          $ref: '#/components/schemas/models.Filter'
+        functionCalls:
+          items:
+            $ref: '#/components/schemas/models.CallStackItem'
+          type: array
+        hasRemediation:
+          type: boolean
+        id:
+          type: string
+        inputFlow:
+          items:
+            $ref: '#/components/schemas/models.CallStackItem'
+          type: array
+        inputSource:
+          type: string
+        inputSourceKind:
+          type: string
+        jiraIssue:
+          $ref: '#/components/schemas/models.StoredJiraIssue'
+        language:
+          type: string
+        markedForDeletion:
+          type: boolean
+        orgId:
+          type: string
+        prUrl:
+          type: string
+        rating:
+          type: number
+        reviewed:
+          type: boolean
+        risk:
+          type: string
+        scanId:
+          type: string
+        severityRating:
+          type: number
+        signature:
+          type: string
+        sink:
+          type: string
+        sinkFile:
+          type: string
+        sinkKind:
+          type: string
+        suppressMessage:
+          type: string
+        suppressTime:
+          type: string
+        suppressedBy:
+          type: string
+        type:
+          $ref: '#/components/schemas/models.VulnerabilityTypeShort'
+      type: object
+    models.VulnerabilityType:
+      properties:
+        capec:
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+          type: object
+        commonId:
+          type: string
+        cwe:
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+          type: object
+        description:
+          type: string
+        hipaa:
+          properties:
+            control:
+              type: string
+            title:
+              type: string
+          type: object
+        hitrust:
+          properties:
+            control:
+              type: string
+            title:
+              type: string
+          type: object
+        id:
+          type: integer
+        name:
+          type: string
+        nist:
+          properties:
+            control:
+              type: string
+            priority:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+          type: object
+        order:
+          type: integer
+        owasp:
+          properties:
+            index:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+          type: object
+        owasp2021:
+          properties:
+            index:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+          type: object
+        pcidss:
+          properties:
+            section:
+              type: string
+            title:
+              type: string
+          type: object
+        recommendation:
+          items:
+            type: string
+          type: array
+        references:
+          items:
+            type: string
+          type: array
+        risk:
+          type: string
+        sansTop25:
+          $ref: '#/components/schemas/models.SansTop25'
+        sarif:
+          type: string
+        sarifLevel:
+          type: string
+        severityRating:
+          type: number
+      type: object
+    models.VulnerabilityTypeResult:
+      properties:
+        count:
+          type: integer
+        countWithFP:
+          type: integer
+        dataFlowsCount:
+          type: integer
+        remediationCount:
+          type: integer
+        type:
+          $ref: '#/components/schemas/models.VulnerabilityType'
+        vulnerabilities:
+          items:
+            $ref: '#/components/schemas/models.Vulnerability'
+          type: array
+      type: object
+    models.VulnerabilityTypeShort:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
