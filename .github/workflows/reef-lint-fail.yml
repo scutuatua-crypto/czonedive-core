@@ -20,12 +20,12 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npx eslint .
-    
+        run: npx eslint "**/*.js"
+
   governance:
     runs-on: ubuntu-latest
     needs: lint
-    if: ${{ failure() }}   # ✅ logic: run governance only if lint fails
+    if: ${{ failure() }}
     steps:
       - name: Governance block
-        run: echo "❌ Governance block triggered because lint failed"
+        run: echo ❌ Governance block triggered because lint failed!
