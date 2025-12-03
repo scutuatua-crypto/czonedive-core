@@ -1,3 +1,10 @@
+# 🐋 Badge: Identity Migration Recorded
+
+From: Scutua (banned)  
+To: scututaua-crypto via czonedive-core  
+Effect: Legacy preserved, WhaleTrucker remixed  
+Status: Memory locked
+
 # 🐋 CZoneDive Core — Reef Platform
 
 This repository is the core reef for validator, beacon node, workflows, and cloud anchors.
