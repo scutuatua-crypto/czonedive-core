@@ -22,3 +22,7 @@ It celebrates every badge, retry, and governance ritual with charts and logs.
 ## 📦 External anchors
 - Dropbox paper: `READM.me.paper`
 - Docs & flows: `createuser.md`, `deleteuser.md`, `data-flows.md`
+
+## 🐋 Boss WhaleTrucker • Reef Legacy Minted
+Identity: scututaua-crypto  
+YES Vote • Reef Archive Active
