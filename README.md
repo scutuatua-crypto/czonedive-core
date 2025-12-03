@@ -1,74 +1,24 @@
-# Binary Nimbus beacon node distribution
+# 🐋 CZoneDive Core — Reef Platform
 
-This binary distribution of the Nimbus eth2 package is compiled
-in a [reproducible way](https://reproducible-builds.org/) from source files
-hosted at https://github.com/status-im/nimbus-eth2.
+This repository is the core reef for validator, beacon node, workflows, and cloud anchors.
+It celebrates every badge, retry, and governance ritual with charts and logs.
 
-The tarball containing this README uses the following naming scheme:
+## 🌐 Reef Links
+- 👉 [reef-flow.md](reef-flow.md)
+- 👉 [recover-flow.md](recover-flow.md)
+- 👉 [badge-history.md](badge-history.md)
+- 👉 [reef-compass.md](reef-compass.md)
+- 👉 [proxy-migration.md](proxy-migration.md)
+- 👉 [staking-flow.md](staking-flow.md)
+- 👉 [governance-flow.md](governance-flow.md)
+- 👉 [notification-flow.md](notification-flow.md)
+- 👉 [splash.log](splash.log)
 
-```bash
-nimbus-eth2_<TARGET OS>_<TARGET CPU>_<VERSION>_<GIT COMMIT>.tar.gz
-```
+## ⚙️ Actions & Scripts
+- GitHub Actions: `.github/workflows/reef-lint.yml`, `reef-mint.yml`, `build.yml`, `test.yml`
+- Beacon scripts: `run-mainnet-beacon-node.sh`, `run-sepolia-beacon-node.sh`
+- Validator & client assets: `nimbus_validator_client`, `nimbus_beacon_node*.zip`, `openethereum-*`
 
-For a more complete and up-to-date documentation, please refer to the [Nimbus book](https://status-im.github.io/nimbus-eth2/).
-
-## Reproducing the build
-
-Besides the generic build requirements, you also need [Docker](https://www.docker.com/).
-
-```bash
-git clone https://github.com/status-im/nimbus-eth2.git
-cd nimbus-eth2
-git checkout 2053090b
-make update
-make dist-macos-arm64
-```
-
-## Significant differences from self-built binaries
-
-Binary builds are configured to maximise portability, disabling the use of
-advanced CPU features which may result in lower performance on some hardware.
-
-## Running a node
-
-See https://nimbus.guide for full instructions on running a node.
-
-To connect to mainnet with default options:
-
-```bash
-./run-mainnet-beacon-node.sh
-```
-
-The script will forward all supplied options to the beacon node executable:
-
-```bash
-./run-mainnet-beacon-node.sh --log-level=DEBUG --tcp-port=9050
-```
-
-To monitor the Eth1 validator deposit contract, you'll need to pair
-the Nimbus beacon node with a Web3 provider capable of serving Eth1
-event logs. This could be a locally running Eth1 client such as Geth
-or a cloud service such as Infura. For more information please see
-our setup guides:
-
-https://status-im.github.io/nimbus-eth2/eth1.html
-
-By default, the script will ask you to enter a web3 provider URL interactively,
-but this can be bypassed by specifying a websocket `WEB3_URL` environment variable:
-
-```bash
-# using a local mainnet instance
-WEB3_URL="ws://localhost:8545" ./run-mainnet-beacon-node.sh
-```
-
-## Testnet
-
-The `hoodi` testnet runs on
-
-```bash
-# using a local hoodi instance
-build/nimbus_beacon_node \
-    --network=hoodi \
-    --data-dir=build/data/shared_hoodi_0 \
-    --web3-url="ws://localhost:8545"
-```
+## 📦 External anchors
+- Dropbox paper: `READM.me.paper`
+- Docs & flows: `createuser.md`, `deleteuser.md`, `data-flows.md`
