@@ -20,3 +20,16 @@ note: identity migration confirmed
 alert: deploy complete
 channel: GitHub Actions
 status: sent
+
+[2025-12-12 13:26 ICT] Webhook Handler Committed
+
+=== GitHub Section ===
+repo: czonedive-core
+file: scripts/github-webhook-handler.js
+branch: main
+status: committed
+
+=== Badge Section ===
+badge: Webhook handler staged
+note: GitHub warning acknowledged, solo ritual confirmed
+
