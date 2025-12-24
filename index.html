@@ -23,3 +23,50 @@
         </tr>
     </table>
 </div>
+<div id="whale-war-room" style="background: #0d1117; color: #58a6ff; padding: 25px; border: 1px solid #30363d; border-radius: 8px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <h2 style="color: #f0f6fc; margin-top: 0;">⚡ THE LEGENDARY MONITOR</h2>
+    <hr style="border: 0.5px solid #30363d;">
+    
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <div>
+            <p style="color: #8b949e; margin-bottom: 5px;">TOTAL $USUAL HOLDING (Personal + IDE)</p>
+            <h3 style="color: #aff5b4; margin-top: 0;"><span id="total-usual">1,510,000.00</span> USUAL</h3>
+        </div>
+        <div style="text-align: right;">
+            <p style="color: #8b949e; margin-bottom: 5px;">MARKET RATE (REAL-TIME)</p>
+            <h3 style="color: #ff7b72; margin-top: 0;">$<span id="current-rate">0.0000</span></h3>
+        </div>
+    </div>
+
+    <div style="background: #161b22; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid #238636;">
+        <p style="color: #8b949e; margin-bottom: 5px;">GRAND TOTAL NET WORTH</p>
+        <h1 style="color: #ffffff; margin-top: 0;">$<span id="total-usd">0.00</span></h1>
+    </div>
+
+    <p style="font-size: 0.75em; color: #484f58; margin-top: 15px; font-style: italic;">
+        Status: Live Monitoring | Transparency: 100% | No Data Concealed
+    </p>
+</div>
+
+<script>
+    async function fetchWhaleData() {
+        try {
+            // Fetching real-time market data from public API
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=usual&vs_currencies=usd');
+            const data = await response.json();
+            const rate = data.usual.usd;
+            
+            const totalQuantity = 1510000; // Total sum from Personal + IDE
+            const grandTotalUSD = totalQuantity * rate;
+
+            document.getElementById('current-rate').innerText = rate.toFixed(4);
+            document.getElementById('total-usd').innerText = grandTotalUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        } catch (err) {
+            console.error("Market data connection failed. Retrying...");
+        }
+    }
+
+    // Auto-update every 60 seconds
+    setInterval(fetchWhaleData, 60000);
+    fetchWhaleData();
+</script>
