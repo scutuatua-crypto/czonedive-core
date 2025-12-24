@@ -1,70 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD-BOY CORE | HQ</title>
-    <style>
-        :root { --red: #ff003c; --gold: #ffaa00; --dark: #0f0f0f; --glass: rgba(255,255,255,0.05); }
-        body { background: var(--dark); color: white; font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
-        .header { border-left: 5px solid var(--red); padding-left: 15px; margin-bottom: 30px; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .stat-card { background: var(--glass); padding: 20px; border-radius: 8px; border: 1px solid #333; }
-        .stat-card h3 { font-size: 0.8rem; color: #888; margin: 0; }
-        .stat-card .value { font-size: 1.8rem; font-weight: bold; margin-top: 10px; }
-        .in-flow { color: #00ff88; }
-        .out-flow { color: var(--gold); }
-        table { width: 100%; margin-top: 30px; border-collapse: collapse; font-size: 0.9rem; }
-        th { text-align: left; color: var(--red); padding: 10px; border-bottom: 2px solid #333; }
-        td { padding: 10px; border-bottom: 1px solid #222; }
-    </style>
-</head>
-<body>
+<div style="background: #1a1a1a; border-left: 5px solid #ff0000; padding: 20px; margin: 20px; color: #eee; font-style: italic;">
+    "ชาติหน้ามันคงไม่มีอยู่จริง ตายแล้วก็จบทุกสิ่ง แล้วทิ้งทุกอย่างไว้ตรงนี้... <br>
+    ชอบอะไรก็ไปทำซะก่อน ดีกว่าล้มหมอนนอนเน่าหมดเวลา"
+</div>
 
-    <div class="header">
-        <h1>CZ-CORE : MISSION_MONEY_AND_HONEY</h1>
-        <p>STATUS: RUNNING_AGGRESSIVE | NO_SAD_ZONE</p>
-    </div>
-
-    <div class="grid-container">
-        <div class="stat-card">
-            <h3>CAPITAL_INVESTED (IN)</h3>
-            <div class="value in-flow" id="totalIn">$1,000.00</div>
-        </div>
-        <div class="stat-card">
-            <h3>CURRENT_EXCHANGE_PRICE</h3>
-            <div class="value" id="currentPrice">$1.25</div>
-        </div>
-        <div class="stat-card">
-            <h3>ASSET_AMOUNT</h3>
-            <div class="value" id="assetAmount">800.00 UNIT</div>
-        </div>
-        <div class="stat-card">
-            <h3>PASSIVE_EARNINGS (OUT)</h3>
-            <div class="value out-flow" id="totalOut">$150.00</div>
-        </div>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>DATE</th>
-                <th>ACTION</th>
-                <th>PRICE</th>
-                <th>AMOUNT</th>
-                <th>TOTAL_VALUE</th>
-            </tr>
-        </thead>
-        <tbody id="logData">
-            <tr>
-                <td>2025-12-23</td>
-                <td>DEPOSIT</td>
-                <td>$1.00</td>
-                <td>1000</td>
-                <td>$1000.00</td>
-            </tr>
-        </tbody>
+<div style="padding: 20px; color: #00ff00;">
+    <h3>🚨 USUAL UNLOCK TRACKER</h3>
+    <table style="width:100%; border: 1px solid #333; border-collapse: collapse;">
+        <tr style="background: #333;">
+            <th style="padding: 10px; border: 1px solid #444;">Date</th>
+            <th style="padding: 10px; border: 1px solid #444;">Amount</th>
+            <th style="padding: 10px; border: 1px solid #444;">Status</th>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #444;">Dec 24, 2025</td>
+            <td style="padding: 10px; border: 1px solid #444;">1.51M USUAL</td>
+            <td style="padding: 10px; border: 1px solid #444; color: #ff0000;">⚠️ UNLOCKING</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #444;">Dec 25, 2025</td>
+            <td style="padding: 10px; border: 1px solid #444;">1.51M USUAL</td>
+            <td style="padding: 10px; border: 1px solid #444; color: #ff0000;">⚠️ UPCOMING</td>
+        </tr>
     </table>
-
-</body>
-</html>
+</div>
