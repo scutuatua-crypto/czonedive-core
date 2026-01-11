@@ -1,4 +1,4 @@
-name: Reef NFT Mint
+Name: Reef NFT Mint
 
 on:
   workflow_dispatch:
@@ -18,8 +18,10 @@ jobs:
                 "name": "reef-nft-042"
               },
               "pinataContent": {
-                "name": "Reef NFT #042",
-                "description": "Minted from reef governance",
+                "name": "WhaleTrucker Reef #042",
+                "description": "Exclusive reward for scutuatua-crypto",
+                "owner_wallet": "0x6e269E9DfEb6d692dDee19ebA5C0BF3575e70Cf1",
+                "allocation": "4,000,000,000 MUTM",
                 "image": "ipfs://QmYourImageHash/nft.png"
               }
             }' | jq -r '.IpfsHash')
