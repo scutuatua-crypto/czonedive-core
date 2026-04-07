@@ -18,7 +18,7 @@ jobs:
       - name: Upload metadata.json to Pinata
         id: pinata
         run: |
-          CID=$(curl -s -X POST https://api.pinata.cloud/pinning/pinJSONToIPFS \
+          RESPONSE=$(curl -s -X POST https://api.pinata.cloud/pinning/pinJSONToIPFS \
             -H "Authorization: Bearer ${{ secrets.PINATA_JWT }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -33,11 +33,19 @@ jobs:
                 "image": "${{ secrets.NFT_IMAGE_IPFS }}"
               }
             }')
-          
-          if [ -z "$CID" ]; then
-            echo "Error: Failed to upload to Pinata"
+
+          if [ -z "$RESPONSE" ]; then
+            echo "Error: Empty response from Pinata API"
             exit 1
           fi
+
+          CID=$(echo "$RESPONSE" | jq -r '.IpfsHash // empty')
+          if [ -z "$CID" ]; then
+            ERROR=$(echo "$RESPONSE" | jq -r '.error // "Unknown error"')
+            echo "Error: Failed to upload to Pinata: $ERROR"
+            exit 1
+          fi
+
           echo "cid=$CID" >> $GITHUB_OUTPUT
 
       - name: Mint NFT on Zora
