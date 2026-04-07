@@ -1,4 +1,4 @@
-Name: Reef NFT Mint
+name: Reef NFT Mint
 
 on:
   workflow_dispatch:
@@ -7,6 +7,14 @@ jobs:
   mint:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Upload metadata.json to Pinata
         id: pinata
         run: |
@@ -20,17 +28,24 @@ jobs:
               "pinataContent": {
                 "name": "WhaleTrucker Reef #042",
                 "description": "Exclusive reward for scutuatua-crypto",
-                "owner_wallet": "0x6e269E9DfEb6d692dDee19ebA5C0BF3575e70Cf1",
+                "owner_wallet": "${{ secrets.OWNER_WALLET }}",
                 "allocation": "4,000,000,000 MUTM",
-                "image": "ipfs://QmYourImageHash/nft.png"
+                "image": "${{ secrets.NFT_IMAGE_IPFS }}"
               }
-            }' | jq -r '.IpfsHash')
+            }')
+          
+          if [ -z "$CID" ]; then
+            echo "Error: Failed to upload to Pinata"
+            exit 1
+          fi
           echo "cid=$CID" >> $GITHUB_OUTPUT
 
       - name: Mint NFT on Zora
         id: mint
         run: |
-          echo "minted=✅ Reef NFT #042 (CID: ${{ steps.pinata.outputs.cid }})" >> $GITHUB_OUTPUT
+          # Implement actual minting logic here
+          echo "Minting NFT with CID: ${{ steps.pinata.outputs.cid }}"
+          echo "minted=true" >> $GITHUB_OUTPUT
 
       - name: Update badge
         uses: RubbaBoy/BYOB@v1.3.0
