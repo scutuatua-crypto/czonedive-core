@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install --ignore-scripts || echo "Install failed but moving on"
+        run: npm install --ignore-scripts
 
       - name: Run linter
-        run: npm run lint || echo "Lint failed but forced green for governance"
+        run: npm run lint
