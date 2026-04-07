@@ -41,7 +41,7 @@ jobs:
 
           CID=$(echo "$RESPONSE" | jq -r '.IpfsHash // empty')
           if [ -z "$CID" ]; then
-            ERROR=$(echo "$RESPONSE" | jq -r '.error // "Unknown error"')
+            ERROR=$(echo "$RESPONSE" | jq -r 'if (.error | type) == "object" then (.error.reason // .error.details // "Unknown error") else (.error // "Unknown error") end')
             echo "Error: Failed to upload to Pinata: $ERROR"
             exit 1
           fi
