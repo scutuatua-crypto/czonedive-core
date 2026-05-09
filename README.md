@@ -1,35 +1,22 @@
-# 🐋 Badge: Identity Migration Recorded
+# 🐋 Identity Migration: Memory Locked
+- **From**: Scutua (Legacy/Banned)
+- **To**: scutuatua-crypto (Active Ecosystem)
+- **Status**: Legacy cloud data (Dropbox) deprecated. All core assets migrated to GitHub & IPFS.
 
-From: Scutua (banned)  
-To: scututaua-crypto via czonedive-core  
-Effect: Legacy preserved, WhaleTrucker remixed  
-Status: Memory locked
+# 🐋 CZoneDive Core — The WhaleTrucker Standard
+This repository serves as the central SDK and infrastructure hub for the WhaleTrucker ecosystem.
 
-# 🐋 CZoneDive Core — Reef Platform
+## 🔐 Security & Integration Status
+- **CI/CD**: GitHub Actions + Codecov 100% Coverage (via `CODECOV_TOKEN`)
+- **Storage**: IPFS Decentralized Storage (via `NFT_IMAGE_IPFS` & `PINATA_JWT`)
+- **Authority**: Zero-Trust Governance (via `OWNER_WALLET`)
 
-This repository is the core reef for validator, beacon node, workflows, and cloud anchors.
-It celebrates every badge, retry, and governance ritual with charts and logs.
+## ⚙️ Core Components
+- **Workflows**: `.github/workflows/ci.yml`, `build.yml`, `test.yml`
+- **Protocol**: Reef Platform Validator & Beacon Node Infrastructure
 
-## 🌐 Reef Links
-- 👉 [reef-flow.md](reef-flow.md)
-- 👉 [recover-flow.md](recover-flow.md)
-- 👉 [badge-history.md](badge-history.md)
-- 👉 [reef-compass.md](reef-compass.md)
-- 👉 [proxy-migration.md](proxy-migration.md)
-- 👉 [staking-flow.md](staking-flow.md)
-- 👉 [governance-flow.md](governance-flow.md)
-- 👉 [notification-flow.md](notification-flow.md)
-- 👉 [splash.log](splash.log)
+## 🌐 Verified Contacts
+- **Primary Email**: scutua.tua@icloud.com
+- **Public/Asset Contact**: t.chaisak2518@outlook.com
 
-## ⚙️ Actions & Scripts
-- GitHub Actions: `.github/workflows/reef-lint.yml`, `reef-mint.yml`, `build.yml`, `test.yml`
-- Beacon scripts: `run-mainnet-beacon-node.sh`, `run-sepolia-beacon-node.sh`
-- Validator & client assets: `nimbus_validator_client`, `nimbus_beacon_node*.zip`, `openethereum-*`
-
-## 📦 External anchors
-- Dropbox paper: `READM.me.paper`
-- Docs & flows: `createuser.md`, `deleteuser.md`, `data-flows.md`
-
-## 🐋 Boss WhaleTrucker • Reef Legacy Minted
-Identity: scututaua-crypto  
-YES Vote • Reef Archive Active
+**"No Money, No Honey"** — WhaleTrucker Standard Active.
