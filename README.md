@@ -14,9 +14,4 @@ This repository serves as the central SDK and infrastructure hub for the WhaleTr
 ## ⚙️ Core Components
 - **Workflows**: `.github/workflows/ci.yml`, `build.yml`, `test.yml`
 - **Protocol**: Reef Platform Validator & Beacon Node Infrastructure
-
-## 🌐 Verified Contacts
-- **Primary Email**: scutua.tua@icloud.com
-- **Public/Asset Contact**: t.chaisak2518@outlook.com
-
-**"No Money, No Honey"** — WhaleTrucker Standard Active.
+- 
