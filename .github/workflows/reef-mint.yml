@@ -1,0 +1,65 @@
+name: Reef NFT Mint
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Upload metadata.json to Pinata
+        id: pinata
+        run: |
+          RESPONSE=$(curl -s -X POST https://api.pinata.cloud/pinning/pinJSONToIPFS \
+            -H "Authorization: Bearer ${{ secrets.PINATA_JWT }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "pinataMetadata": {
+                "name": "reef-nft-042"
+              },
+              "pinataContent": {
+                "name": "WhaleTrucker Reef #042",
+                "description": "Exclusive reward for scutuatua-crypto",
+                "owner_wallet": "${{ secrets.OWNER_WALLET }}",
+                "allocation": "4,000,000,000 MUTM",
+                "image": "${{ secrets.NFT_IMAGE_IPFS }}"
+              }
+            }')
+
+          if [ -z "$RESPONSE" ]; then
+            echo "Error: Empty response from Pinata API"
+            exit 1
+          fi
+
+          CID=$(echo "$RESPONSE" | jq -r '.IpfsHash // empty')
+          if [ -z "$CID" ]; then
+            ERROR=$(echo "$RESPONSE" | jq -r 'if (.error | type) == "object" then (.error.reason // .error.details // "Unknown error") else (.error // "Unknown error") end')
+            echo "Error: Failed to upload to Pinata: $ERROR"
+            exit 1
+          fi
+
+          echo "cid=$CID" >> $GITHUB_OUTPUT
+
+      - name: Mint NFT on Zora
+        id: mint
+        run: |
+          # Implement actual minting logic here
+          echo "Minting NFT with CID: ${{ steps.pinata.outputs.cid }}"
+          echo "minted=true" >> $GITHUB_OUTPUT
+
+      - name: Update badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: reef-mint
+          LABEL: 'Mint Status'
+          STATUS: ${{ steps.mint.outputs.minted }}
+          COLOR: 00EEFF
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

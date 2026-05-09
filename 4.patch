@@ -1,0 +1,41 @@
+From f41c9694e11bf670fcb8860c788fc51c506dcb1e Mon Sep 17 00:00:00 2001
+From: Whaletrucker Reef Architect <scutua.tua@icloud.com>
+Date: Tue, 23 Dec 2025 21:48:24 +0700
+Subject: [PATCH] Create BAD-BOY CORE
+
+---
+ BAD-BOY CORE | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 BAD-BOY CORE
+
+diff --git a/BAD-BOY CORE b/BAD-BOY CORE
+new file mode 100644
+index 0000000..7636364
+--- /dev/null
++++ b/BAD-BOY CORE	
+@@ -0,0 +1,25 @@
++<div class="bad-boy-header">
++    <h1>BAD-BOY CORE <small>TRADING_SYSTEM_v1.0</small></h1>
++    <div class="status-blink">FLOW_STATUS: AGGRESSIVE</div>
++</div>
++
++<div class="main-matrix">
++    <div class="matrix-box red-line">
++        <label>TOTAL_IN</label>
++        <div class="value" id="valIn">$0.00</div>
++    </div>
++
++    <div class="matrix-box white-line">
++        <label>UNIT_AMOUNT</label>
++        <div class="value" id="valAmount">0.00</div>
++    </div>
++
++    <div class="matrix-box gold-line">
++        <label>HONEY_EARNED</label>
++        <div class="value" id="valOut">$0.00</div>
++    </div>
++</div>
++
++<div class="price-feed">
++    <span>MARKET_PRICE_BTC: </span><span id="btcPrice">LOADING...</span>
++</div>

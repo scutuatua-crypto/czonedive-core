@@ -1,0 +1,107 @@
+diff --git a/.github/workflows/release.yaml b/.github/workflows/release.yaml
+index 7ff21616..cf5547c4 100644
+--- a/.github/workflows/release.yaml
++++ b/.github/workflows/release.yaml
+@@ -27,7 +27,7 @@ jobs:
+     needs: detect-clients
+     runs-on: ubuntu-latest
+     strategy:
+-      max-parallel: 2
++      max-parallel: 3
+       matrix:
+         client: ${{ fromJson(needs.detect-clients.outputs.clients) }}
+     steps:
+diff --git a/common/CHANGELOG.md b/common/CHANGELOG.md
+index f9ec6145..6b17e89a 100644
+--- a/common/CHANGELOG.md
++++ b/common/CHANGELOG.md
+@@ -1,5 +1,11 @@
+ # Changelog
+ 
++## 3.1.1 - 2025-09-16
++
++### Changed (1)
++
++- Fixed missing enum check in `clean_none_value`.
++
+ ## 3.1.0 - 2025-09-12
+ 
+ ### Changed (3)
+diff --git a/common/pyproject.toml b/common/pyproject.toml
+index e080896c..68e49ff2 100644
+--- a/common/pyproject.toml
++++ b/common/pyproject.toml
+@@ -1,6 +1,6 @@
+ [tool.poetry]
+ name = "binance-common"
+-version = "3.1.0"
++version = "3.1.1"
+ description = "Binance Common Types and Utilities for Binance Connectors"
+ authors = ["Binance"]
+ license = "MIT"
+diff --git a/common/src/binance_common/utils.py b/common/src/binance_common/utils.py
+index 6cff3df1..999d15f3 100644
+--- a/common/src/binance_common/utils.py
++++ b/common/src/binance_common/utils.py
+@@ -89,7 +89,9 @@ def clean_none_value(d: dict) -> dict:
+         dict: A new dictionary with only non-`None` values from the input dictionary.
+     """
+ 
+-    if isinstance(d, dict):
++    if isinstance(d, Enum):
++        return d.value
++    elif isinstance(d, dict):
+         out = {}
+         for k, v in d.items():
+             cleaned = clean_none_value(v)
+@@ -182,7 +184,7 @@ def encoded_string(query: str) -> str:
+ 
+     query = transform_query(query)
+     query = {
+-        k: json.dumps(v, separators=(",", ":")) if isinstance(v, (dict, list)) else v
++        snake_to_camel(k): json.dumps(make_serializable(v), separators=(",", ":")) if isinstance(v, (dict, list)) else make_serializable(v)
+         for k, v in query.items()
+     }
+     return urlencode(query, True)
+diff --git a/common/tests/unit/test_utils.py b/common/tests/unit/test_utils.py
+index ac5c8921..5e266dbc 100644
+--- a/common/tests/unit/test_utils.py
++++ b/common/tests/unit/test_utils.py
+@@ -249,6 +249,20 @@ def test_clean_none_value_with_array_of_dicts(self):
+ 
+         assert clean_none_value(input_list) == expected_output
+ 
++    def test_clean_none_value_with_enum(self):
++        class BasisPeriodEnum(Enum):
++            TEST_A = "TEST_A"
++            TEST_B = "TEST_B"
++
++        input_list = [
++            {"a": 0, "b": False, "c": BasisPeriodEnum.TEST_A, "d": "", "e": [], "f": {}},
++        ]
++        expected_output = [
++            {"a": 0, "b": False, "c": "TEST_A", "d": ""}
++        ]
++
++        assert clean_none_value(input_list) == expected_output
++
+ 
+ class TestGetTimestamp(unittest.TestCase):
+     def test_timestamp_is_integer(self):
+@@ -417,6 +431,16 @@ def __init__(self, a, b):
+ 
+         self.assertEqual(encoded_string(query), expected_value)
+ 
++    def test_encode_with_snake_case(self):
++        query = {"user_email": "test@example.com", "admin_email": "admin@domain.com"}
++
++        expected_value = urlencode({
++            "userEmail": "test@example.com",
++            "adminEmail": "admin@domain.com"
++        }, doseq=True)
++
++        self.assertEqual(encoded_string(query), expected_value)
++
+ 
+ class TestIsOneOfModel(unittest.TestCase):
+ 

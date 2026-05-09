@@ -1,18 +1,17 @@
-# czonedive-core
-# Czonedive Core ⚡
+# 🐋 Identity Migration: Memory Locked
+- **From**: Scutua (Legacy/Banned)
+- **To**: scutuatua-crypto (Active Ecosystem)
+- **Status**: Legacy cloud data (Dropbox) deprecated. All core assets migrated to GitHub & IPFS.
 
-Core SDK and smart-contract utilities powering CZonedive.
+# 🐋 CZoneDive Core — The WhaleTrucker Standard
+This repository serves as the central SDK and infrastructure hub for the WhaleTrucker ecosystem.
 
-## Quickstart
-git clone https://github.com/scutuatua-crypto/Czonedive-core.git
-cd Czonedive-core
-npm install
-npm run test
+## 🔐 Security & Integration Status
+- **CI/CD**: GitHub Actions + Codecov 100% Coverage (via `CODECOV_TOKEN`)
+- **Storage**: IPFS Decentralized Storage (via `NFT_IMAGE_IPFS` & `PINATA_JWT`)
+- **Authority**: Zero-Trust Governance (via `OWNER_WALLET`)
 
-## Features
-- Smart-contract helpers
-- SDK utilities
-- API examples for onboarding
-
-git add README.md
-git commit -m "docs: add README 
+## ⚙️ Core Components
+- **Workflows**: `.github/workflows/ci.yml`, `build.yml`, `test.yml`
+- **Protocol**: Reef Platform Validator & Beacon Node Infrastructure
+- 
