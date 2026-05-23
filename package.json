@@ -1,0 +1,10 @@
+{
+  "name": "czonedive-core",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint . --ext .js,.ts"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
