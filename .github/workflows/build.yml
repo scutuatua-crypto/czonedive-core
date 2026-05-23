@@ -24,9 +24,11 @@ jobs:
         with:
           node-version: '18'
 
-      # Temporarily commented out until package.json is added to the root directory
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build project
-      #   run: npm run build
+      # Safely handle missing package.json setup
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json found, skipping build requirements."
+          fi
