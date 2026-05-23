@@ -1,6 +1,15 @@
-name: Reef Lint Governance
+name: Lint
 
 on:
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '**.paper'
+      - '**.xlsx'
+      - '**.patch'
+      - '**.diff'
+      - '.github/workflows/**'
   push:
     branches: [ main ]
     paths-ignore:
@@ -16,17 +25,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
-      # Temporarily commented out until package.json is added
-      # - name: Install dependencies
-      #   run: npm install
+      # Inline check prevents crashes if package.json is missing
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install --ignore-scripts
+          else
+            echo "No package.json found, skipping."
+          fi
 
-      # Temporarily commented out until ESLint configuration file is created
-      # - name: Run ESLint
-      #   run: npx eslint "**/*.js"
+      # Inline rules bypass the missing configuration file error
+      - name: Run linter
+        run: |
+          npx eslint . --ext .js,.ts --no-eslintrc --rules '{"no-unused-vars": "warn", "no-console": "off"}'
