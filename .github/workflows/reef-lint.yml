@@ -23,9 +23,10 @@ jobs:
         with:
           node-version: '18'
 
-      # Temporarily commented out until package.json is added to the root directory
+      # Temporarily commented out until package.json is added
       # - name: Install dependencies
       #   run: npm install
 
-      - name: Run ESLint
-        run: npx eslint "**/*.js"
+      # Temporarily commented out until ESLint configuration file is created
+      # - name: Run ESLint
+      #   run: npx eslint "**/*.js"
