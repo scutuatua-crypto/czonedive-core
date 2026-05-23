@@ -2,6 +2,15 @@ name: Reef NFT Mint
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '**.paper'
+      - '**.xlsx'
+      - '**.patch'
+      - '**.diff'
+      - '.github/workflows/**'
 
 jobs:
   mint:
