@@ -25,7 +25,6 @@ let tokenContract;
 // DOM Elements
 const connectBtn = document.getElementById('connectBtn');
 const claimBtn = document.getElementById('claimBtn');
-const walletSection = document.getElementById('walletSection');
 const walletAddressEl = document.getElementById('walletAddress');
 const statsSection = document.getElementById('statsSection');
 const loadingSection = document.getElementById('loadingSection');
